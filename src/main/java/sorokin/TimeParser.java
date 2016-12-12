@@ -41,7 +41,11 @@ public class TimeParser {
         } else {
             message = bundle.getString("night");
         }
-        ShowTime.show(message);
+        show(message);
+    }
+    
+    public void show(String message){
+        System.out.println(message);
     }
 
 }
