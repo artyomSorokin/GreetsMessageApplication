@@ -3,12 +3,7 @@ package sorokin;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-
-
-import java.util.Date;
-
-
+import java.time.LocalTime;
 
 public class TimeParserTest {
 
@@ -25,11 +20,11 @@ public class TimeParserTest {
     @Test()
     public void parseDateInstanceDateTest(){
         timeParser.parseDate(readFile.loadFile());
-        Assert.assertTrue(timeParser.morning instanceof Date);
-        Assert.assertTrue(timeParser.day instanceof Date);
-        Assert.assertTrue(timeParser.evening instanceof Date);
-        Assert.assertTrue(timeParser.night instanceof Date);
-        Assert.assertTrue(timeParser.currentTime instanceof Date);
+        Assert.assertTrue(timeParser.morning instanceof LocalTime);
+        Assert.assertTrue(timeParser.day instanceof LocalTime);
+        Assert.assertTrue(timeParser.evening instanceof LocalTime);
+        Assert.assertTrue(timeParser.night instanceof LocalTime);
+        Assert.assertTrue(timeParser.currentTime instanceof LocalTime);
     }
 
     @Test()
@@ -45,13 +40,73 @@ public class TimeParserTest {
     @Test()
     public void parseDateEqualsTest(){
         timeParser.parseDate(readFile.loadFile());
-        String line1[] = timeParser.morning.toString().split(" ");
-        Assert.assertEquals(line1[3], "06:00:00");
-        String line2[] = timeParser.day.toString().split(" ");
-        Assert.assertEquals(line2[3], "09:00:00");
-        String line3[] = timeParser.evening.toString().split(" ");
-        Assert.assertEquals(line3[3], "19:00:00");
-        String line4[] = timeParser.night.toString().split(" ");
-        Assert.assertEquals(line4[3], "23:00:00");
+        Assert.assertEquals(timeParser.morning, LocalTime.parse("06:00:00"));
+        Assert.assertEquals(timeParser.day, LocalTime.parse("09:00:00"));
+        Assert.assertEquals(timeParser.evening, LocalTime.parse("19:00:00"));
+        Assert.assertEquals(timeParser.night, LocalTime.parse("23:00:00"));
+    }
+
+    @Test()
+    public void defineTimeLimitMorningTest(){
+        timeParser.parseDate(readFile.loadFile());
+        timeParser.currentTime = LocalTime.parse("06:00:00");
+        timeParser.defineTime();
+        Assert.assertEquals(timeParser.message, "Доброе утро, Мир!");
+    }
+
+    @Test()
+    public void defineTimeLimitDayTest(){
+        timeParser.parseDate(readFile.loadFile());
+        timeParser.currentTime = LocalTime.parse("09:00:00");
+        timeParser.defineTime();
+        Assert.assertEquals(timeParser.message, "Добрый день, Мир!");
+    }
+
+    @Test()
+    public void defineTimeLimitEveningTest(){
+        timeParser.parseDate(readFile.loadFile());
+        timeParser.currentTime = LocalTime.parse("19:00:00");
+        timeParser.defineTime();
+        Assert.assertEquals(timeParser.message, "Добрый вечер, Мир!");
+    }
+
+    @Test()
+    public void defineTimeLimitNightTest(){
+        timeParser.parseDate(readFile.loadFile());
+        timeParser.currentTime = LocalTime.parse("23:00:00");
+        timeParser.defineTime();
+        Assert.assertEquals(timeParser.message, "Спокойной ночи, Мир!");
+    }
+
+    @Test()
+    public void defineTimeMorningTest(){
+        timeParser.parseDate(readFile.loadFile());
+        timeParser.currentTime = LocalTime.parse("07:53:00");
+        timeParser.defineTime();
+        Assert.assertEquals(timeParser.message, "Доброе утро, Мир!");
+    }
+
+    @Test()
+    public void defineTimeDayTest(){
+        timeParser.parseDate(readFile.loadFile());
+        timeParser.currentTime = LocalTime.parse("18:54:00");
+        timeParser.defineTime();
+        Assert.assertEquals(timeParser.message, "Добрый день, Мир!");
+    }
+
+    @Test()
+    public void defineTimeEveningTest(){
+        timeParser.parseDate(readFile.loadFile());
+        timeParser.currentTime = LocalTime.parse("22:59:00");
+        timeParser.defineTime();
+        Assert.assertEquals(timeParser.message, "Добрый вечер, Мир!");
+    }
+
+    @Test()
+    public void defineTimeNightTest(){
+        timeParser.parseDate(readFile.loadFile());
+        timeParser.currentTime = LocalTime.parse("05:59:00");
+        timeParser.defineTime();
+        Assert.assertEquals(timeParser.message, "Спокойной ночи, Мир!");
     }
 }
